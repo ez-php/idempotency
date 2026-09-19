@@ -1,0 +1,51 @@
+{
+  "name": "ez-php/idempotency",
+  "version": "2.4.6",
+  "description": "Idempotency-Key middleware for safe POST retries",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andreas Uretschnig",
+      "email": "andreas.uretschnig@gmail.com"
+    }
+  ],
+  "keywords": ["idempotency", "idempotency-key", "middleware", "http", "php", "ez-php"],
+  "homepage": "https://github.com/ez-php/idempotency",
+  "support": {
+    "issues": "https://github.com/ez-php/idempotency/issues",
+    "source": "https://github.com/ez-php/idempotency"
+  },
+  "require": {
+    "php": "^8.5",
+    "ez-php/contracts": "^2.0"
+  },
+  "suggest": {
+    "ez-php/cache": "Provides the CacheInterface implementation that stores responses and locks"
+  },
+  "require-dev": {
+    "ez-php/cache": "^2.0",
+    "ez-php/docker": "^2.0",
+    "phpunit/phpunit": "^13.0",
+    "phpstan/phpstan": "^2.1",
+    "friendsofphp/php-cs-fixer": "^3.94",
+    "phpstan/phpstan-strict-rules": "^2.0",
+    "phpstan/phpstan-deprecation-rules": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "EzPhp\\Idempotency\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "cs": "php-cs-fixer fix",
+    "analyse": "phpstan analyse",
+    "test": "phpunit",
+    "full": "composer analyse && composer cs && composer test"
+  }
+}

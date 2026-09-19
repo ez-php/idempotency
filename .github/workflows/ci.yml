@@ -1,0 +1,129 @@
+name: ez-php/idempotency - CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring
+          coverage: pcov
+
+      - name: Cache Composer packages
+        uses: actions/cache@v5
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Composer install
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Composer audit
+        run: composer audit
+
+      - name: Run CS Fixer (check only)
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse
+
+      - name: Run tests with coverage
+        run: vendor/bin/phpunit
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./var/coverage/clover.xml
+          flags: idempotency
+          fail_ci_if_error: false
+
+  compatibility:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.5', '8.6', 'nightly']
+        include:
+          - php-version: '8.5'
+            experimental: false
+          - php-version: '8.6'
+            experimental: true
+          - php-version: 'nightly'
+            experimental: true
+    continue-on-error: ${{ matrix.experimental }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring
+          coverage: none
+
+      - name: Cache Composer packages
+        uses: actions/cache@v5
+        with:
+          path: vendor
+          key: ${{ runner.os }}-compat-php${{ matrix.php-version }}-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-compat-php${{ matrix.php-version }}-composer-
+
+      - name: Composer install
+        run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse
+        continue-on-error: ${{ matrix.experimental }}
+
+      - name: Run tests
+        run: vendor/bin/phpunit --no-coverage
+
+  tag:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Read version
+        id: version
+        run: echo "value=$(jq -r '.version // empty' composer.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag if not exists
+        id: create-tag
+        if: steps.version.outputs.value != ''
+        env:
+          TAG: v${{ steps.version.outputs.value }}
+        run: |
+          if git ls-remote --tags origin "refs/tags/$TAG" | grep -q "$TAG"; then
+            echo "Tag $TAG already exists, skipping."
+            echo "tagged=false" >> "$GITHUB_OUTPUT"
+          else
+            git tag "$TAG"
+            git push origin "$TAG"
+            echo "Tagged $TAG"
+            echo "tagged=true" >> "$GITHUB_OUTPUT"
+          fi

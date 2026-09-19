@@ -1,0 +1,15 @@
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+      args:
+        WWWUSER: 1000
+        WWWGROUP: 1000
+    container_name: ez-php-idempotency-app
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html
+    env_file:
+      - .env
