@@ -1,6 +1,6 @@
 {
   "name": "ez-php/idempotency",
-  "version": "2.4.11",
+  "version": "2.5.0",
   "description": "Idempotency-Key middleware for safe POST retries",
   "type": "library",
   "license": "MIT",
@@ -18,7 +18,8 @@
   },
   "require": {
     "php": "^8.5",
-    "ez-php/contracts": "^2.0"
+    "ez-php/contracts": "^2.0",
+    "ez-php/http": "^2.0"
   },
   "suggest": {
     "ez-php/cache": "Provides the CacheInterface implementation that stores responses and locks"

@@ -25,6 +25,9 @@ use EzPhp\Http\ResponseInterface;
  *  - same key, first request in flight → 409
  *  - same key, completed              → stored response, plus `Idempotent-Replayed: true`
  *
+ * Keys are partitioned per caller: the partition is `$scope` when given, otherwise a hash of the
+ * `Authorization` and `Cookie` headers, so two callers that pick the same key never share an entry.
+ *
  * Only {@see Response} results below 500 are stored, so a failed attempt can be retried.
  * Streamed responses and cookies are never stored.
  *
@@ -44,8 +47,8 @@ final class IdempotencyMiddleware implements MiddlewareInterface
      * @param CacheInterface                        $cache   Stores responses and the in-flight lock.
      * @param int                                   $ttl     Seconds a stored response stays replayable.
      * @param int                                   $lockTtl Seconds the in-flight lock is held at most.
-     * @param Closure(RequestInterface): string|null $scope  Optional partition (e.g. user id) so equal
-     *                                                       keys from different callers never collide.
+     * @param Closure(RequestInterface): string|null $scope  Optional partition (e.g. user id) replacing the
+     *                                                       default `Authorization` + `Cookie` header hash.
      */
     public function __construct(
         private readonly CacheInterface $cache,
@@ -74,7 +77,7 @@ final class IdempotencyMiddleware implements MiddlewareInterface
             return self::error(400, 'Invalid Idempotency-Key header.');
         }
 
-        $storageKey = 'idempotency:' . ($this->scope !== null ? ($this->scope)($request) . ':' : '') . $key;
+        $storageKey = 'idempotency:' . hash('sha256', $this->scopeFor($request)) . ':' . $key;
         $fingerprint = hash('sha256', strtoupper($request->method()) . "\n" . $request->uri() . "\n" . hash('sha256', $request->rawBody()));
 
         $early = $this->replay($storageKey, $fingerprint);
@@ -113,6 +116,25 @@ final class IdempotencyMiddleware implements MiddlewareInterface
         } finally {
             $lock->release();
         }
+    }
+
+    /**
+     * The caller partition: the custom scope, or the credentials the request presents.
+     *
+     * @param RequestInterface $request
+     *
+     * @return string
+     */
+    private function scopeFor(RequestInterface $request): string
+    {
+        if ($this->scope !== null) {
+            return ($this->scope)($request);
+        }
+
+        $authorization = $request->header('authorization');
+        $cookie = $request->header('cookie');
+
+        return (is_string($authorization) ? $authorization : '') . "\n" . (is_string($cookie) ? $cookie : '');
     }
 
     /**

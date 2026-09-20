@@ -26,9 +26,22 @@ final class IdempotencyMiddlewareTest extends TestCase
         $this->calls = 0;
     }
 
-    private function request(?string $key, string $body = '{"a":1}', string $method = 'POST', string $uri = '/orders'): Request
+    /**
+     * Lock key of a request that carries no credentials (empty default scope).
+     */
+    private function lockKey(string $key): string
     {
-        return new Request($method, $uri, headers: $key === null ? [] : ['idempotency-key' => $key], rawBody: $body);
+        return 'idempotency:' . hash('sha256', "\n") . ':' . $key . ':lock';
+    }
+
+    /**
+     * @param array<string, string> $extraHeaders
+     */
+    private function request(?string $key, string $body = '{"a":1}', string $method = 'POST', string $uri = '/orders', array $extraHeaders = []): Request
+    {
+        $headers = $extraHeaders + ($key === null ? [] : ['idempotency-key' => $key]);
+
+        return new Request($method, $uri, headers: $headers, rawBody: $body);
     }
 
     private function dispatch(IdempotencyMiddleware $middleware, Request $request, int $status = 201): Response
@@ -102,7 +115,7 @@ final class IdempotencyMiddlewareTest extends TestCase
     public function test_concurrent_request_gets_409_while_lock_is_held(): void
     {
         $mw = new IdempotencyMiddleware($this->cache);
-        $lock = $this->cache->lock('idempotency:k1:lock', 30);
+        $lock = $this->cache->lock($this->lockKey('k1'), 30);
         self::assertTrue($lock->acquire());
 
         $response = $this->dispatch($mw, $this->request('k1'));
@@ -117,7 +130,7 @@ final class IdempotencyMiddlewareTest extends TestCase
 
         $this->dispatch($mw, $this->request('k1'));
 
-        self::assertTrue($this->cache->lock('idempotency:k1:lock', 30)->acquire());
+        self::assertTrue($this->cache->lock($this->lockKey('k1'), 30)->acquire());
     }
 
     public function test_lock_is_released_when_handler_throws(): void
@@ -132,7 +145,7 @@ final class IdempotencyMiddlewareTest extends TestCase
         } catch (\RuntimeException) {
         }
 
-        self::assertTrue($this->cache->lock('idempotency:k1:lock', 30)->acquire());
+        self::assertTrue($this->cache->lock($this->lockKey('k1'), 30)->acquire());
     }
 
     public function test_server_errors_are_not_stored(): void
@@ -219,6 +232,52 @@ final class IdempotencyMiddlewareTest extends TestCase
         $this->dispatch($mw, $this->request('k1'));
         $user = 'bob';
         $this->dispatch($mw, $this->request('k1'));
+
+        self::assertSame(2, $this->calls);
+    }
+
+    public function test_default_scope_separates_callers_with_different_credentials(): void
+    {
+        $mw = new IdempotencyMiddleware($this->cache);
+
+        $this->dispatch($mw, $this->request('shared', extraHeaders: ['authorization' => 'Bearer alice']));
+        $bob = $this->dispatch($mw, $this->request('shared', extraHeaders: ['authorization' => 'Bearer bob']));
+
+        self::assertSame(2, $this->calls);
+        self::assertNull(($bob->headers()['Idempotent-Replayed'] ?? null));
+    }
+
+    public function test_default_scope_replays_for_same_credentials(): void
+    {
+        $mw = new IdempotencyMiddleware($this->cache);
+
+        $this->dispatch($mw, $this->request('shared', extraHeaders: ['authorization' => 'Bearer alice']));
+        $again = $this->dispatch($mw, $this->request('shared', extraHeaders: ['authorization' => 'Bearer alice']));
+
+        self::assertSame(1, $this->calls);
+        self::assertSame('true', ($again->headers()['Idempotent-Replayed'] ?? null));
+    }
+
+    public function test_default_scope_separates_session_cookies(): void
+    {
+        $mw = new IdempotencyMiddleware($this->cache);
+
+        $this->dispatch($mw, $this->request('shared', extraHeaders: ['cookie' => 'sid=a']));
+        $this->dispatch($mw, $this->request('shared', extraHeaders: ['cookie' => 'sid=b']));
+
+        self::assertSame(2, $this->calls);
+    }
+
+    public function test_scope_containing_separator_cannot_collide_with_other_key(): void
+    {
+        $scope = 'a';
+        $mw = new IdempotencyMiddleware($this->cache, scope: static function () use (&$scope): string {
+            return $scope;
+        });
+
+        $this->dispatch($mw, $this->request('b:c'));
+        $scope = 'a:b';
+        $this->dispatch($mw, $this->request('c'));
 
         self::assertSame(2, $this->calls);
     }

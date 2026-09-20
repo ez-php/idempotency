@@ -51,7 +51,7 @@ new IdempotencyMiddleware(
 );
 ```
 
-Keys are global unless `scope` is set — use it when keys come from authenticated clients so different users cannot collide.
+Keys are partitioned per caller: by default a hash of the `Authorization` and `Cookie` headers, so different users cannot collide. Set `scope` to partition by something more stable (e.g. the user id) — for instance when the session cookie rotates between retries.
 
 ## Development
 

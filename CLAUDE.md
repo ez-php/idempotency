@@ -175,8 +175,8 @@ Two things stay manual on purpose:
 - **`CLAUDE.md` part 1** — only the `# Package:` section is generated. Run
   `composer guidelines:sync` afterwards; baking a guidelines copy into the generator
   would recreate the drift the sync script exists to prevent.
-- **The host-port table below** (`--services` only) — editing it marks all ~40
-  `CLAUDE.md` copies as drifted at once, so the next `composer full` would fail for
+- **The host-port table below** (`--services` only) — editing it marks every
+  `CLAUDE.md` copy as drifted at once, so the next `composer full` would fail for
   a brand-new module. The generator prints which ports to claim instead.
 
 ### 4 — Docker scaffold
@@ -289,7 +289,7 @@ Constructor: `CacheInterface $cache`, `int $ttl = 86400`, `int $lockTtl = 30`, `
 - **Locking** uses `CacheInterface::lock()`, non-blocking: a losing request gets 409 rather than waiting. The lock is re-checked against the store after acquisition (double-checked) so a request finishing between lookup and lock is replayed, not re-executed. The lock is always released in `finally`.
 - **Only `Response` results with status < 500 are stored.** 5xx must stay retryable; `StreamedResponse` cannot be buffered. Both pass through unstored.
 - **Cookies are never stored or replayed** (they are per-session state).
-- **Keys are global unless `$scope` is given.** Pass e.g. `fn (RequestInterface $r) => (string) $userId` when keys come from authenticated clients, otherwise two users sending the same key share one entry.
+- **Keys are partitioned per caller.** The partition is `$scope` when given, otherwise a hash of the `Authorization` + `Cookie` headers; it is always hashed into the storage key (so a scope containing `:` cannot collide with another scope/key split). Pass e.g. `fn (RequestInterface $r) => (string) $userId` when the session cookie can change between retries — a retry with different credentials is treated as a new request.
 - **No service provider**: the middleware autowires (only defaulted scalars beyond `CacheInterface`); register it per route/group or globally as needed.
 - A crash mid-request leaves no stored response; the key becomes usable again once `lockTtl` elapses.
 
