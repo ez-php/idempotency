@@ -1,6 +1,6 @@
 {
   "name": "ez-php/idempotency",
-  "version": "2.5.2",
+  "version": "2.5.3",
   "description": "Idempotency-Key middleware for safe POST retries",
   "type": "library",
   "license": "MIT",
