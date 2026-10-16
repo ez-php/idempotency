@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4487e1ea233b8e26df57897f13e38ce1",
+    "content-hash": "ec86f0440e73a9e1bc346211eefbd7cd",
     "packages": [
         {
             "name": "ez-php/contracts",
-            "version": "2.5.6",
+            "version": "2.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ez-php/contracts.git",
-                "reference": "f1f80f731ea95e4c5f23021b5f4ab4dd53a3e86c"
+                "reference": "fa1503a68ca9c6c4d77b1a2789de60d82e2a0eb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ez-php/contracts/zipball/f1f80f731ea95e4c5f23021b5f4ab4dd53a3e86c",
-                "reference": "f1f80f731ea95e4c5f23021b5f4ab4dd53a3e86c",
+                "url": "https://api.github.com/repos/ez-php/contracts/zipball/fa1503a68ca9c6c4d77b1a2789de60d82e2a0eb1",
+                "reference": "fa1503a68ca9c6c4d77b1a2789de60d82e2a0eb1",
                 "shasum": ""
             },
             "require": {
@@ -63,20 +63,20 @@
                 "issues": "https://github.com/ez-php/contracts/issues",
                 "source": "https://github.com/ez-php/contracts"
             },
-            "time": "2026-09-30T18:37:33+00:00"
+            "time": "2026-10-14T23:27:59+00:00"
         },
         {
             "name": "ez-php/http",
-            "version": "2.5.6",
+            "version": "2.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ez-php/http.git",
-                "reference": "c4e98e3b5391d4e5273c474e4952a4ea1142333a"
+                "reference": "1d0cec931f137a4c409784755c3b9a053e713035"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ez-php/http/zipball/c4e98e3b5391d4e5273c474e4952a4ea1142333a",
-                "reference": "c4e98e3b5391d4e5273c474e4952a4ea1142333a",
+                "url": "https://api.github.com/repos/ez-php/http/zipball/1d0cec931f137a4c409784755c3b9a053e713035",
+                "reference": "1d0cec931f137a4c409784755c3b9a053e713035",
                 "shasum": ""
             },
             "require": {
@@ -120,7 +120,7 @@
                 "issues": "https://github.com/ez-php/http/issues",
                 "source": "https://github.com/ez-php/http"
             },
-            "time": "2026-09-30T18:37:45+00:00"
+            "time": "2026-10-14T23:28:06+00:00"
         }
     ],
     "packages-dev": [
@@ -409,42 +409,42 @@
         },
         {
             "name": "ergebnis/agent-detector",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/agent-detector.git",
-                "reference": "e211f17928c8b95a51e06040792d57f5462fb271"
+                "reference": "0cd815cec1207873c37624d33f0f2853523152f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/agent-detector/zipball/e211f17928c8b95a51e06040792d57f5462fb271",
-                "reference": "e211f17928c8b95a51e06040792d57f5462fb271",
+                "url": "https://api.github.com/repos/ergebnis/agent-detector/zipball/0cd815cec1207873c37624d33f0f2853523152f3",
+                "reference": "0cd815cec1207873c37624d33f0f2853523152f3",
                 "shasum": ""
             },
             "require": {
                 "php": "~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0"
             },
             "require-dev": {
-                "ergebnis/composer-normalize": "^2.51.0",
-                "ergebnis/license": "^2.7.0",
+                "ergebnis/composer-normalize": "^2.54.0",
+                "ergebnis/license": "^2.8.0",
                 "ergebnis/php-cs-fixer-config": "^6.60.2",
-                "ergebnis/phpstan-rules": "^2.13.1",
-                "ergebnis/phpunit-slow-test-detector": "^2.24.0",
-                "ergebnis/rector-rules": "^1.18.1",
+                "ergebnis/phpstan-rules": "^2.14.0",
+                "ergebnis/phpunit-slow-test-detector": "^2.26.0",
+                "ergebnis/rector-rules": "^1.18.5",
                 "fakerphp/faker": "^1.24.1",
                 "infection/infection": "^0.26.6",
                 "phpstan/extension-installer": "^1.4.3",
-                "phpstan/phpstan": "^2.1.54",
-                "phpstan/phpstan-deprecation-rules": "^2.0.4",
-                "phpstan/phpstan-phpunit": "^2.0.16",
-                "phpstan/phpstan-strict-rules": "^2.0.10",
+                "phpstan/phpstan": "^2.2.14",
+                "phpstan/phpstan-deprecation-rules": "^2.0.5",
+                "phpstan/phpstan-phpunit": "^2.1.1",
+                "phpstan/phpstan-strict-rules": "^2.1.0",
                 "phpunit/phpunit": "^9.6.34",
-                "rector/rector": "^2.4.2"
+                "rector/rector": "^2.7.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.2-dev"
+                    "dev-main": "1.3-dev"
                 },
                 "composer-normalize": {
                     "indent-size": 2,
@@ -474,7 +474,7 @@
                 "security": "https://github.com/ergebnis/agent-detector/blob/main/.github/SECURITY.md",
                 "source": "https://github.com/ergebnis/agent-detector"
             },
-            "time": "2026-05-07T08:19:07+00:00"
+            "time": "2026-10-15T11:13:32+00:00"
         },
         {
             "name": "evenement/evenement",
@@ -525,16 +525,16 @@
         },
         {
             "name": "ez-php/cache",
-            "version": "2.5.6",
+            "version": "2.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ez-php/cache.git",
-                "reference": "fe06e8ad11dc12446224554ffa4a93a738c20b10"
+                "reference": "f5165bc6d56341c2a2c9a5008817e5f14cf58f28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ez-php/cache/zipball/fe06e8ad11dc12446224554ffa4a93a738c20b10",
-                "reference": "fe06e8ad11dc12446224554ffa4a93a738c20b10",
+                "url": "https://api.github.com/repos/ez-php/cache/zipball/f5165bc6d56341c2a2c9a5008817e5f14cf58f28",
+                "reference": "f5165bc6d56341c2a2c9a5008817e5f14cf58f28",
                 "shasum": ""
             },
             "require": {
@@ -583,20 +583,20 @@
                 "issues": "https://github.com/ez-php/cache/issues",
                 "source": "https://github.com/ez-php/cache"
             },
-            "time": "2026-09-30T18:37:43+00:00"
+            "time": "2026-10-14T23:28:05+00:00"
         },
         {
             "name": "ez-php/docker",
-            "version": "2.5.6",
+            "version": "2.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ez-php/docker.git",
-                "reference": "9eba5db376272c661aed017e978ca935379b8ce4"
+                "reference": "aa3d5db11fdc7613b0457d06f02995ef35fba965"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ez-php/docker/zipball/9eba5db376272c661aed017e978ca935379b8ce4",
-                "reference": "9eba5db376272c661aed017e978ca935379b8ce4",
+                "url": "https://api.github.com/repos/ez-php/docker/zipball/aa3d5db11fdc7613b0457d06f02995ef35fba965",
+                "reference": "aa3d5db11fdc7613b0457d06f02995ef35fba965",
                 "shasum": ""
             },
             "require": {
@@ -617,9 +617,9 @@
             "description": "Docker base image source and scaffolding stubs for ez-php modules and projects",
             "support": {
                 "issues": "https://github.com/ez-php/docker/issues",
-                "source": "https://github.com/ez-php/docker/tree/v2.5.6"
+                "source": "https://github.com/ez-php/docker/tree/v2.5.7"
             },
-            "time": "2026-09-30T18:37:41+00:00"
+            "time": "2026-10-14T23:28:03+00:00"
         },
         {
             "name": "fidry/cpu-core-counter",
@@ -1574,16 +1574,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "13.4.2",
+            "version": "13.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "7b9ba83328f01ce299ef82161720195bd827a4bb"
+                "reference": "2180c47c4229e5da117ff248753370443c074f10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7b9ba83328f01ce299ef82161720195bd827a4bb",
-                "reference": "7b9ba83328f01ce299ef82161720195bd827a4bb",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2180c47c4229e5da117ff248753370443c074f10",
+                "reference": "2180c47c4229e5da117ff248753370443c074f10",
                 "shasum": ""
             },
             "require": {
@@ -1654,7 +1654,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.4.2"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.4.3"
             },
             "funding": [
                 {
@@ -1662,7 +1662,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-10-12T15:29:04+00:00"
+            "time": "2026-10-16T05:56:47+00:00"
         },
         {
             "name": "psr/container",
