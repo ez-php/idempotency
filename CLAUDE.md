@@ -328,4 +328,4 @@ Constructor: `CacheInterface $cache`, `int $ttl = 86400`, `int $lockTtl = 30`, `
 | Request throttling | `ez-php/rate-limiter` |
 | Request/response value objects, streamed responses | `ez-php/http` |
 | Authentication / deciding the `$scope` value | `ez-php/auth` or application code |
-| Database-backed idempotency storage | not provided; supply a `CacheInterface` implementation |
+| Database-backed idempotency storage | not a store of its own — pass `ez-php/cache`'s `DatabaseDriver` (or any `CacheInterface`) |
