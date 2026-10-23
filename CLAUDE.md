@@ -244,7 +244,8 @@ After scaffolding:
 | `ez-php/scheduler` | — | 6386 (`REDIS_HOST_PORT`) | — |
 | `ez-php/session` | — | 6387 (`REDIS_HOST_PORT`) | — |
 | `ez-php/metrics` | — | 6388 (`REDIS_HOST_PORT`) | — |
-| **next free** | **3312** | **6389** | **7702** |
+| `ez-php/event-store-snapshots` | 3312 | — | — |
+| **next free** | **3313** | **6389** | **7702** |
 
 Only set a port for services the module actually uses. Modules without external services need no port config.
 
