@@ -192,7 +192,7 @@ Two things stay manual on purpose:
 
 ### 4 — Docker scaffold
 
-Run from the new module root (requires `ez-php/docker` in `require-dev` — like every ez-php requirement, constrained to the current release, e.g. `"^2.6.0"`):
+Run from the new module root (requires `ez-php/docker` in `require-dev` — like every ez-php requirement, constrained to the current release, e.g. `"^2.7.0"`):
 
 ```
 vendor/bin/docker-init
